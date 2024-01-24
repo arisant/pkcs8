@@ -135,7 +135,8 @@ func parseEncryptionScheme(encryptionScheme pkix.AlgorithmIdentifier) (Cipher, [
 // This is equivalent to ParsePKCS8PrivateKey.
 func ParsePrivateKey(der []byte, password []byte) (interface{}, KDFParameters, error) {
 	// No password provided, assume the private key is unencrypted
-	if len(password) == 0 {
+	// zero password is a valid password so check against nil instead of len()
+	if password == nil {
 		privateKey, err := x509.ParsePKCS8PrivateKey(der)
 		return privateKey, nil, err
 	}
